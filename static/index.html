@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Research Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="page">
+        <h1 class="site-title">Personal Research Agent.</h1>
+
+        <div class="main-layout">
+            <!-- Left: Config -->
+            <div class="config-section">
+                <button class="config-toggle" id="config-toggle" onclick="toggleConfig()">
+                    <span>Config</span>
+                    <span class="toggle-arrow" id="toggle-arrow">▽</span>
+                </button>
+                <div class="config-panel" id="config-panel">
+                    <div class="key-group">
+                        <div class="key-label-row">
+                            <span class="key-label">Anthropic API Key</span>
+                            <span class="key-link">[ Link for users to get theirs ]</span>
+                        </div>
+                        <input type="password" id="anthropic-key" class="key-input">
+                    </div>
+                    <div class="key-group">
+                        <div class="key-label-row">
+                            <span class="key-label">Tavily API key</span>
+                            <span class="key-link">[ Link for users to get theirs ]</span>
+                        </div>
+                        <input type="password" id="tavily-key" class="key-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Research -->
+            <div class="research-section">
+                <h2 class="research-heading">Research Topic</h2>
+                <input type="text" id="topic-input" class="topic-input">
+                <div class="btn-row">
+                    <button id="research-btn" onclick="startResearch()">Start Research</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="lower-section" id="progress-card" style="display:none">
+            <h2 class="lower-heading">Agent Progress</h2>
+            <div id="progress-log"></div>
+        </div>
+
+        <!-- Report -->
+        <div class="lower-section" id="report-card" style="display:none">
+            <div class="report-top">
+                <h2 class="lower-heading">Research Report</h2>
+                <button class="pill-btn-sm" id="download-btn" onclick="downloadReport()">⬇ Download .md</button>
+            </div>
+            <div id="report-output"></div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

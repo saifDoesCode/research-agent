@@ -1,0 +1,298 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Agdasima', sans-serif;
+    background: #ffffff;
+    color: #000000;
+}
+
+.page {
+    padding: 52px 58px;
+    min-height: 100vh;
+}
+
+/* ── Title ── */
+.site-title {
+    display: block;
+    width: 100%;
+    font-weight: 700;
+    line-height: 1.0;
+    white-space: nowrap;
+    margin-bottom: 52px;
+    /* font-size set dynamically by fitTitle() in app.js */
+    font-size: 90px;
+}
+
+/* ── Two-column layout ── */
+.main-layout {
+    display: flex;
+    gap: 110px;
+    align-items: flex-start;
+}
+
+/* ── Config section (left) ── */
+.config-section {
+    width: 310px;
+    flex-shrink: 0;
+}
+
+.config-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 100px;
+    font-family: 'Agdasima', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+}
+
+.toggle-arrow {
+    font-size: 0.85rem;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.config-toggle.collapsed .toggle-arrow {
+    transform: rotate(-90deg);
+}
+
+.config-panel {
+    background: #f0f0f0;
+    border-radius: 20px;
+    padding: 22px 20px 18px;
+    margin-top: 10px;
+    max-height: 400px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.28s ease, opacity 0.22s ease, padding 0.28s ease;
+}
+
+.config-panel.hidden {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.key-group {
+    margin-bottom: 18px;
+}
+
+.key-group:last-child {
+    margin-bottom: 0;
+}
+
+.key-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 9px;
+}
+
+.key-label {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.key-link {
+    font-size: 0.68rem;
+    color: #999;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.key-input {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    background: #e2e2e2;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Agdasima', sans-serif;
+    font-size: 0.95rem;
+    color: #000;
+    outline: none;
+}
+
+/* ── Research section (right) ── */
+.research-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.research-heading {
+    font-size: 2.4rem;
+    font-weight: 400;
+    margin-bottom: 22px;
+    letter-spacing: -0.01em;
+}
+
+.topic-input {
+    display: block;
+    width: 100%;
+    padding: 28px 34px;
+    border: 2.5px solid #b8b8b8;
+    border-radius: 100px;
+    font-family: 'Agdasima', sans-serif;
+    font-size: 1.15rem;
+    color: #000;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.topic-input:focus {
+    border-color: #707070;
+}
+
+.btn-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+#research-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 16px 56px;
+    border-radius: 100px;
+    font-family: 'Agdasima', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: opacity 0.2s;
+}
+
+#research-btn:hover {
+    opacity: 0.72;
+}
+
+#research-btn:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+}
+
+/* ── Progress & Report sections ── */
+.lower-section {
+    margin-top: 64px;
+}
+
+.lower-heading {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 22px;
+    letter-spacing: -0.01em;
+}
+
+.report-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.report-top .lower-heading {
+    margin-bottom: 0;
+}
+
+.pill-btn-sm {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 26px;
+    border-radius: 100px;
+    font-family: 'Agdasima', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.pill-btn-sm:hover {
+    opacity: 0.72;
+}
+
+#progress-log {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progress-item {
+    font-size: 1rem;
+    color: #333;
+    padding: 10px 18px;
+    background: #f4f4f4;
+    border-radius: 12px;
+}
+
+/* ── Report output typography ── */
+#report-output {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #222;
+}
+
+#report-output h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+#report-output h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-top: 28px;
+    margin-bottom: 10px;
+}
+
+#report-output h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+#report-output p {
+    margin-bottom: 14px;
+}
+
+#report-output ul {
+    padding-left: 24px;
+    margin-bottom: 14px;
+}
+
+#report-output li {
+    margin-bottom: 6px;
+}
+
+#report-output a {
+    color: #000;
+    text-decoration: underline;
+}
+
+#report-output hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 24px 0;
+}
+
+#report-output em {
+    color: #888;
+    font-size: 0.9rem;
+}
