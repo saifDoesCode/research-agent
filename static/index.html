@@ -10,58 +10,53 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="page">
-        <h1 class="site-title">Personal Research Agent.</h1>
 
-        <div class="main-layout">
-            <!-- Left: Config -->
-            <div class="config-section">
-                <button class="config-toggle" id="config-toggle" onclick="toggleConfig()">
-                    <span>Config</span>
-                    <span class="toggle-arrow" id="toggle-arrow">▽</span>
-                </button>
-                <div class="config-panel" id="config-panel">
-                    <div class="key-group">
-                        <div class="key-label-row">
-                            <span class="key-label">Anthropic API Key</span>
-                            <span class="key-link">[ Link for users to get theirs ]</span>
-                        </div>
-                        <input type="password" id="anthropic-key" class="key-input">
+    <!-- Mobile hamburger -->
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Open config">
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Mobile overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <p class="config-label">Config</p>
+            <input type="password" class="api-input" id="anthropic-key" placeholder="Anthropic API Key">
+            <input type="password" class="api-input" id="tavily-key" placeholder="Tavily API Key">
+        </aside>
+
+        <!-- Main -->
+        <main class="main" id="main">
+            <div class="main-inner">
+                <h1 class="site-title">Personal Research Agent</h1>
+
+                <input
+                    type="text"
+                    id="topic-input"
+                    class="topic-input"
+                    placeholder="Topic You Want To Research"
+                    onkeydown="handleKeyDown(event)"
+                >
+
+                <!-- Progress -->
+                <div id="progress-card" style="display:none">
+                    <div id="progress-log"></div>
+                </div>
+
+                <!-- Report -->
+                <div id="report-card" style="display:none">
+                    <div class="report-actions">
+                        <button class="pill-btn" onclick="downloadReport()">Download Report</button>
                     </div>
-                    <div class="key-group">
-                        <div class="key-label-row">
-                            <span class="key-label">Tavily API key</span>
-                            <span class="key-link">[ Link for users to get theirs ]</span>
-                        </div>
-                        <input type="password" id="tavily-key" class="key-input">
-                    </div>
+                    <div id="report-output"></div>
                 </div>
             </div>
+        </main>
 
-            <!-- Right: Research -->
-            <div class="research-section">
-                <h2 class="research-heading">Research Topic</h2>
-                <input type="text" id="topic-input" class="topic-input">
-                <div class="btn-row">
-                    <button id="research-btn" onclick="startResearch()">Start Research</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Progress -->
-        <div class="lower-section" id="progress-card" style="display:none">
-            <h2 class="lower-heading">Agent Progress</h2>
-            <div id="progress-log"></div>
-        </div>
-
-        <!-- Report -->
-        <div class="lower-section" id="report-card" style="display:none">
-            <div class="report-top">
-                <h2 class="lower-heading">Research Report</h2>
-                <button class="pill-btn-sm" id="download-btn" onclick="downloadReport()">⬇ Download .md</button>
-            </div>
-            <div id="report-output"></div>
-        </div>
     </div>
 
     <script src="/static/app.js"></script>
