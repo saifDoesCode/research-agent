@@ -151,8 +151,41 @@ Be specific — use real facts and details from the research."""
 
 @app.route("/")
 def index():
-    """Serve the frontend."""
     return send_from_directory("static", "index.html")
+
+@app.route("/developer")
+def developer():
+    return send_from_directory(".", "developer-info.html")
+
+@app.route("/test-connection", methods=["POST"])
+def test_connection():
+    data = request.json
+    anthropic_key = data.get("anthropic_key", "").strip() or os.getenv("ANTHROPIC_API_KEY")
+    tavily_key = data.get("tavily_key", "").strip() or os.getenv("TAVILY_API_KEY")
+
+    result = {"anthropic": False, "tavily": False, "errors": {}}
+
+    if anthropic_key:
+        try:
+            client = anthropic.Anthropic(api_key=anthropic_key)
+            client.messages.create(model=MODEL, max_tokens=1, messages=[{"role": "user", "content": "hi"}])
+            result["anthropic"] = True
+        except Exception as e:
+            result["errors"]["anthropic"] = str(e)
+    else:
+        result["errors"]["anthropic"] = "No key provided"
+
+    if tavily_key:
+        try:
+            client = TavilyClient(api_key=tavily_key)
+            client.search("test", max_results=1)
+            result["tavily"] = True
+        except Exception as e:
+            result["errors"]["tavily"] = str(e)
+    else:
+        result["errors"]["tavily"] = "No key provided"
+
+    return result
 
 @app.route("/research", methods=["POST"])
 def research():

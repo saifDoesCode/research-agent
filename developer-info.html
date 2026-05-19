@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Info</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:  #D4A464;
+            --white: #ffffff;
+            --w80: rgba(255,255,255,0.80);
+            --w30: rgba(255,255,255,0.30);
+            --w15: rgba(255,255,255,0.15);
+        }
+
+        body {
+            font-family: 'Agdasima', sans-serif;
+            background: var(--bg);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 480px;
+            border: 1.5px solid var(--w80);
+            border-radius: 28px;
+            padding: 48px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        #particle-cone { display: block; }
+
+        /* Name block */
+        .name-block { display: flex; flex-direction: column; gap: 4px; }
+
+        .name {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .role {
+            font-size: 1.1rem;
+            color: var(--w80);
+        }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--w30);
+        }
+
+        /* Section */
+        .section { display: flex; flex-direction: column; gap: 14px; }
+
+        .section-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--w80);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            background: var(--w15);
+            border: 1px solid var(--w30);
+            border-radius: 14px;
+            font-size: 1.05rem;
+        }
+
+        .info-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+        .info-link {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+
+        .info-link:hover { opacity: 1; text-decoration: underline; }
+
+        /* Project tag */
+        .project-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--w15);
+            border: 1px solid var(--w30);
+            border-radius: 100px;
+            font-size: 1rem;
+            align-self: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+
+        <canvas id="particle-cone"></canvas>
+
+        <div class="name-block">
+            <h1 class="name">Saif Ahmed</h1>
+            <p class="role">Builder &amp; Developer</p>
+        </div>
+
+        <hr class="divider">
+
+        <div class="section">
+            <p class="section-label">Contact</p>
+            <div class="info-row">
+                <span class="info-icon">✉</span>
+                <a class="info-link" href="mailto:saifanis03@gmail.com">saifanis03@gmail.com</a>
+            </div>
+            <div class="info-row">
+                <span class="info-icon">&#9679;</span>
+                <a class="info-link" href="https://github.com/saifanis03" target="_blank">github.com/saifanis03</a>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="section">
+            <p class="section-label">Project</p>
+            <div class="project-tag">
+                <span>&#9670;</span>
+                Personal Research Agent
+            </div>
+            <p style="font-size:1rem; color: var(--w80); line-height:1.6;">
+                An agentic research tool powered by Claude and Tavily — iteratively searches the web and generates structured markdown reports on any topic.
+            </p>
+        </div>
+
+    </div>
+<script>
+(function () {
+  const CONFIG = {
+    width: 120, height: 120,
+    radius: 36, coneHeight: 56,
+    particleSpacing: 2.8, dotSize: 0.85,
+    color: '221, 161, 94',
+    rotationSpeed: 0.012, tiltX: 0.35, fov: 180,
+  };
+
+  const canvas = document.getElementById('particle-cone');
+  const ctx = canvas.getContext('2d');
+  canvas.width = CONFIG.width;
+  canvas.height = CONFIG.height;
+
+  function buildConePoints() {
+    const pts = [], R = CONFIG.radius, H = CONFIG.coneHeight, STEP = CONFIG.particleSpacing, baseY = H / 2;
+    for (let px = -R; px <= R; px += STEP)
+      for (let pz = -R; pz <= R; pz += STEP)
+        if (px*px + pz*pz <= R*R) pts.push({ x: px, y: baseY, z: pz });
+    const slices = Math.ceil(H / STEP);
+    for (let si = 0; si <= slices; si++) {
+      const t = si / slices, y = baseY - t * H, r = R * (1 - t);
+      const steps = Math.max(1, Math.round(2 * Math.PI * r / STEP));
+      for (let j = 0; j < steps; j++) {
+        const theta = (2 * Math.PI * j) / steps;
+        pts.push({ x: r * Math.cos(theta), y, z: r * Math.sin(theta) });
+      }
+    }
+    return pts;
+  }
+
+  const points = buildConePoints();
+  let angleY = 0;
+
+  const rotateX = (p, a) => ({ x: p.x, y: p.y * Math.cos(a) - p.z * Math.sin(a), z: p.y * Math.sin(a) + p.z * Math.cos(a) });
+  const rotateY = (p, a) => ({ x: p.x * Math.cos(a) + p.z * Math.sin(a), y: p.y, z: -p.x * Math.sin(a) + p.z * Math.cos(a) });
+  const project = (p) => {
+    const z = p.z + CONFIG.fov;
+    return { x: (p.x * CONFIG.fov) / z + CONFIG.width / 2, y: (p.y * CONFIG.fov) / z + CONFIG.height / 2, z: p.z };
+  };
+
+  function draw() {
+    ctx.clearRect(0, 0, CONFIG.width, CONFIG.height);
+    angleY += CONFIG.rotationSpeed;
+    const projected = points.map(p => { let r = rotateX(p, CONFIG.tiltX); r = rotateY(r, angleY); return project(r); });
+    projected.sort((a, b) => a.z - b.z);
+    const R = CONFIG.radius;
+    for (const p of projected) {
+      const depth = (p.z + R + 80) / (R * 2 + 80);
+      const alpha = 0.15 + depth * 0.85;
+      const radius = CONFIG.dotSize * (0.4 + depth * 0.7);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${CONFIG.color}, ${alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>

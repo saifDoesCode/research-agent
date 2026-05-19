@@ -27,7 +27,45 @@
             <p class="config-label">Config</p>
             <input type="password" class="api-input" id="anthropic-key" placeholder="Anthropic API Key">
             <input type="password" class="api-input" id="tavily-key" placeholder="Tavily API Key">
+            <button class="pill-btn test-btn" id="test-btn" onclick="testConnection()">Test Connection</button>
+            <div id="test-result"></div>
+
+            <!-- Bottom actions -->
+            <div class="sidebar-footer">
+                <button class="sys-design-btn" onclick="openModal('sysdesign-modal')">System Design</button>
+                <button class="dev-info-btn" onclick="openModal('devinfo-modal')">
+                    <canvas id="particle-cone-btn"></canvas>
+                    <span class="dev-info-text">
+                        <span class="dev-info-name">Saif Ahmed</span>
+                        <span class="dev-info-sub">View Developer Info</span>
+                    </span>
+                </button>
+            </div>
         </aside>
+
+        <!-- System Design Modal -->
+        <div class="modal-overlay" id="sysdesign-modal" onclick="closeModalOutside(event, 'sysdesign-modal')">
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeModal('sysdesign-modal')">&#x2715;</button>
+                <h2 class="modal-title">System Design</h2>
+                <div class="modal-img-wrap">
+                    <img src="/static/system-design.png" alt="System design diagram"
+                         onerror="this.style.display='none'; document.getElementById('sysdesign-placeholder').style.display='flex'">
+                    <div id="sysdesign-placeholder" class="img-placeholder">
+                        <span>&#9670;</span>
+                        <p>System design diagram coming soon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer Info Modal -->
+        <div class="modal-overlay" id="devinfo-modal" onclick="closeModalOutside(event, 'devinfo-modal')">
+            <div class="modal-card modal-card--iframe">
+                <button class="modal-close" onclick="closeModal('devinfo-modal')">&#x2715;</button>
+                <iframe src="/developer" class="dev-iframe" title="Developer Info"></iframe>
+            </div>
+        </div>
 
         <!-- Main -->
         <main class="main" id="main">
