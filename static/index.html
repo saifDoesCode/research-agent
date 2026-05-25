@@ -24,23 +24,14 @@
 
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <p class="config-label">Config</p>
-            <input type="password" class="api-input" id="anthropic-key" placeholder="Anthropic API Key">
-            <input type="password" class="api-input" id="tavily-key" placeholder="Tavily API Key">
-            <button class="pill-btn test-btn" id="test-btn" onclick="testConnection()">Test Connection</button>
-            <div id="test-result"></div>
-
-            <!-- Bottom actions -->
-            <div class="sidebar-footer">
-                <button class="sys-design-btn" onclick="openModal('sysdesign-modal')">System Design</button>
-                <button class="dev-info-btn" onclick="openModal('devinfo-modal')">
-                    <canvas id="particle-cone-btn"></canvas>
-                    <span class="dev-info-text">
-                        <span class="dev-info-name">Saif Ahmed</span>
-                        <span class="dev-info-sub">View Developer Info</span>
-                    </span>
-                </button>
-            </div>
+            <button class="sys-design-btn" onclick="openModal('sysdesign-modal')">System Design</button>
+            <button class="dev-info-btn" onclick="openModal('devinfo-modal')">
+                <canvas id="particle-cone-btn"></canvas>
+                <span class="dev-info-text">
+                    <span class="dev-info-name">Saif Ahmed</span>
+                    <span class="dev-info-sub">View Developer Info</span>
+                </span>
+            </button>
         </aside>
 
         <!-- System Design Modal -->
@@ -49,7 +40,7 @@
                 <button class="modal-close" onclick="closeModal('sysdesign-modal')">&#x2715;</button>
                 <h2 class="modal-title">System Design</h2>
                 <div class="modal-img-wrap">
-                    <img src="/static/system-design.png" alt="System design diagram"
+                    <img src="/static/systemdesign.png" alt="System design diagram"
                          onerror="this.style.display='none'; document.getElementById('sysdesign-placeholder').style.display='flex'">
                     <div id="sysdesign-placeholder" class="img-placeholder">
                         <span>&#9670;</span>
@@ -95,6 +86,16 @@
             </div>
         </main>
 
+    </div>
+
+    <!-- Rate limit modal -->
+    <div class="modal-overlay" id="ratelimit-modal" onclick="closeModalOutside(event, 'ratelimit-modal')">
+        <div class="modal-card ratelimit-card">
+            <button class="modal-close" onclick="closeModal('ratelimit-modal')">&#x2715;</button>
+            <div class="ratelimit-icon">&#9651;</div>
+            <h2 class="ratelimit-title">Daily Limit Reached</h2>
+            <p class="ratelimit-msg">You've used all 3 free research requests for today. The limit resets at midnight — come back tomorrow!</p>
+        </div>
     </div>
 
     <script src="/static/app.js"></script>

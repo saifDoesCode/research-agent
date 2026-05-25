@@ -86,8 +86,6 @@ function handleKeyDown(e) {
 
 async function startResearch() {
     const topic = document.getElementById("topic-input").value.trim();
-    const anthropicKey = document.getElementById("anthropic-key").value.trim();
-    const tavilyKey = document.getElementById("tavily-key").value.trim();
 
     if (!topic) return;
 
@@ -105,12 +103,14 @@ async function startResearch() {
         const response = await fetch("/research", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                topic,
-                anthropic_key: anthropicKey,
-                tavily_key: tavilyKey
-            })
+            body: JSON.stringify({ topic })
         });
+
+        if (response.status === 429) {
+            document.getElementById("progress-card").style.display = "none";
+            openModal("ratelimit-modal");
+            return;
+        }
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -170,42 +170,6 @@ function renderMarkdown(text) {
         .replace(/^---$/gm,       "<hr>")
         .replace(/\n\n/g,         "</p><p>")
         .replace(/^(?!<[hup])/gm, "<p>");
-}
-
-async function testConnection() {
-    const anthropicKey = document.getElementById("anthropic-key").value.trim();
-    const tavilyKey = document.getElementById("tavily-key").value.trim();
-    const resultEl = document.getElementById("test-result");
-    const btn = document.getElementById("test-btn");
-
-    resultEl.innerHTML = `
-        <div class="test-row"><span class="test-dot checking"></span>Anthropic…</div>
-        <div class="test-row"><span class="test-dot checking"></span>Tavily…</div>
-    `;
-    btn.disabled = true;
-
-    try {
-        const res = await fetch("/test-connection", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ anthropic_key: anthropicKey, tavily_key: tavilyKey })
-        });
-        const data = await res.json();
-
-        const row = (ok, label, err) => `
-            <div class="test-row">
-                <span class="test-dot ${ok ? 'ok' : 'err'}"></span>
-                <span>${label}: ${ok ? 'Connected' : (err || 'Failed')}</span>
-            </div>`;
-
-        resultEl.innerHTML =
-            row(data.anthropic, 'Anthropic', data.errors?.anthropic) +
-            row(data.tavily,    'Tavily',    data.errors?.tavily);
-    } catch (err) {
-        resultEl.innerHTML = `<div class="test-row"><span class="test-dot err"></span>Request failed</div>`;
-    } finally {
-        btn.disabled = false;
-    }
 }
 
 function downloadReport() {
