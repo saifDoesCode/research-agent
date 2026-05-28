@@ -1,4 +1,5 @@
 let reportMarkdown = "";
+const API_BASE = window.RESEARCH_API_BASE || "";
 
 (function () {
   const CONFIG = {
@@ -100,7 +101,7 @@ async function startResearch() {
     input.placeholder = "Researching…";
 
     try {
-        const response = await fetch("/research", {
+        const response = await fetch(`${API_BASE}/research`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ topic })

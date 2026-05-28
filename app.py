@@ -20,7 +20,7 @@ setup_logging()  # initialise once when Flask starts
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__, static_folder="static")
-CORS(app)
+CORS(app, origins=os.getenv("ALLOWED_ORIGINS", "*").split(","))
 
 limiter = Limiter(
     get_remote_address,

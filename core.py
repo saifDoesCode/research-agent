@@ -5,6 +5,13 @@ from datetime import datetime
 from dataclasses import dataclass
 import anthropic
 from tavily import TavilyClient
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+    before_sleep_log
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,13 +46,59 @@ class AgentResult:
     error: str = ""
 
 
-def call_claude(anthropic_client: anthropic.Anthropic, **kwargs) -> anthropic.types.Message:
-    """Thin wrapper around messages.create for easy mocking and retry handling."""
-    return anthropic_client.messages.create(**kwargs)
+# --- Retry Policies ---
+#
+# Two separate policies:
+#   - claude_retry: for Anthropic API calls (RateLimitError, APIStatusError)
+#   - search_retry: for Tavily calls (generic Exception, since Tavily
+#     doesn't expose typed exceptions)
+#
+# wait_exponential: first retry after 2s, doubles each time, caps at 30s
+# stop_after_attempt: gives up after 4 total tries (1 original + 3 retries)
+# before_sleep_log: logs a WARNING before each retry so you can see it happening
 
+claude_retry = retry(
+    retry=retry_if_exception_type((
+        anthropic.RateLimitError,
+        anthropic.APIStatusError,
+        anthropic.APIConnectionError,
+    )),
+    wait=wait_exponential(multiplier=1, min=2, max=30),
+    stop=stop_after_attempt(4),
+    before_sleep=before_sleep_log(logger, logging.WARNING),
+    reraise=True   # if all retries fail, re-raise the original exception
+)
 
+search_retry = retry(
+    retry=retry_if_exception_type(Exception),
+    wait=wait_exponential(multiplier=1, min=2, max=20),
+    stop=stop_after_attempt(3),
+    before_sleep=before_sleep_log(logger, logging.WARNING),
+    reraise=True
+)
+
+# --- Retryable API Wrappers ---
+
+@claude_retry
+def call_claude(anthropic_client: anthropic.Anthropic, **kwargs):
+    """
+    Single wrapper for all Anthropic calls.
+    Retries on rate limits and transient API errors.
+    Also logs token usage on every successful call.
+    """
+    response = anthropic_client.messages.create(**kwargs)
+    logger.info(
+        f"Claude call succeeded — model={kwargs.get('model')}, "
+        f"input_tokens={response.usage.input_tokens}, "
+        f"output_tokens={response.usage.output_tokens}"
+    )
+    return response
+
+# core.py — update run_search exception handling
+@search_retry
 def run_search(tavily_client: TavilyClient, query: str) -> str:
     """Execute a Tavily search and return formatted results."""
+    logger.debug(f"Running search — query='{query}'")
     try:
         search_response = tavily_client.search(query, max_results=MAX_SEARCH_RESULTS)
         formatted_results = ""
@@ -53,10 +106,12 @@ def run_search(tavily_client: TavilyClient, query: str) -> str:
             formatted_results += f"\nResult {i + 1}: {result['title']}\n"
             formatted_results += f"URL: {result['url']}\n"
             formatted_results += f"Summary: {result['content'][:300]}\n"
+        logger.info(f"Search succeeded — query='{query}', results={len(search_response['results'])}")
         return formatted_results
-    except Exception as e:
-        logger.exception(f"Search failed for query '{query}'")
-        raise
+    except Exception:
+        # logger.exception logs the full traceback automatically
+        logger.exception(f"Search failed — query='{query}'")
+        raise  # let tenacity handle retries
 
 
 def generate_report(anthropic_client: anthropic.Anthropic, topic: str, raw_findings: str) -> str:
