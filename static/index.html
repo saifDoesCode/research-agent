@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -40,7 +40,7 @@
                 <button class="modal-close" onclick="closeModal('sysdesign-modal')">&#x2715;</button>
                 <h2 class="modal-title">System Design</h2>
                 <div class="modal-img-wrap">
-                    <img src="/static/systemdesign.png" alt="System design diagram"
+                    <img src="systemdesign.png" alt="System design diagram"
                          onerror="this.style.display='none'; document.getElementById('sysdesign-placeholder').style.display='flex'">
                     <div id="sysdesign-placeholder" class="img-placeholder">
                         <span>&#9670;</span>
@@ -54,7 +54,7 @@
         <div class="modal-overlay" id="devinfo-modal" onclick="closeModalOutside(event, 'devinfo-modal')">
             <div class="modal-card modal-card--iframe">
                 <button class="modal-close" onclick="closeModal('devinfo-modal')">&#x2715;</button>
-                <iframe src="/developer" class="dev-iframe" title="Developer Info"></iframe>
+                <iframe src="https://research-agent-kfqj.onrender.com/developer" class="dev-iframe" title="Developer Info"></iframe>
             </div>
         </div>
 
