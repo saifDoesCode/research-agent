@@ -1,4 +1,4 @@
-flask-limiter==3.9.4
+flask-limiter==3.9.2
 gunicorn==22.0.0
 aiohappyeyeballs==2.6.1
 aiohttp==3.13.5
