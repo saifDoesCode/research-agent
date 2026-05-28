@@ -81,6 +81,13 @@ function toggleSidebar() {
     document.getElementById('overlay').classList.toggle('open');
 }
 
+let warmedUp = false;
+function warmupServer() {
+    if (warmedUp) return;
+    warmedUp = true;
+    fetch(`${API_BASE}/ping`).catch(() => {});
+}
+
 function handleKeyDown(e) {
     if (e.key === 'Enter') startResearch();
 }

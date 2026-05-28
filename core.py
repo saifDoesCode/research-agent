@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 # --- Shared Configuration ---
 MODEL = "claude-haiku-4-5"
-MAX_ITERATIONS = 10
+MAX_ITERATIONS = 5
 MAX_SEARCH_RESULTS = 3
 
 TOOLS = [

@@ -119,6 +119,10 @@ def run_agent_streaming(anthropic_client, tavily_client, topic):
             messages.append({"role": "user", "content": tool_results})
 
 
+@app.route("/ping")
+def ping():
+    return {"status": "ok"}, 200
+
 @app.route("/")
 def index():
     return send_from_directory("static", "index.html")
